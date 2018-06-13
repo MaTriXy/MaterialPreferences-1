@@ -33,14 +33,18 @@ import android.support.v4.content.ContextCompat
 import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.View
+import android.view.ViewGroup
+import android.widget.LinearLayout
+import android.widget.ProgressBar
 import android.widget.RelativeLayout
 import android.widget.TextView
 
-class MaterialPreference : Preference {
+class MaterialProgressPreference : Preference {
 
     private lateinit var title: TextView
     private lateinit var summary: TextView
     private lateinit var parent: RelativeLayout
+    private var progressBar: ProgressBar? = null
 
     private var titleColor: Int = Color.BLACK
     private var titleSize: Float = 16f
@@ -55,8 +59,10 @@ class MaterialPreference : Preference {
 
     private var background: Int = Color.WHITE
 
+    private var visibility: Boolean = true
+
     /**
-     * Construct a new MaterialPreference with default style options.
+     * Construct a new MaterialProgressPreference with default style options.
      *
      * @param context The Context that will style this preference
      */
@@ -65,7 +71,7 @@ class MaterialPreference : Preference {
     }
 
     /**
-     * Construct a new MaterialPreference with the given style options.
+     * Construct a new MaterialProgressPreference with the given style options.
      *
      * @param context The Context that will style this preference
      * @param attrs Style attributes that differ from the default
@@ -76,7 +82,7 @@ class MaterialPreference : Preference {
     }
 
     /**
-     * Construct a new MaterialPreference with the given style options.
+     * Construct a new MaterialProgressPreference with the given style options.
      *
      * @param context The Context that will style this preference
      * @param attrs Style attributes that differ from the default
@@ -90,17 +96,17 @@ class MaterialPreference : Preference {
     }
 
     /**
-     * Construct a new MaterialPreference with the given style options.
+     * Construct a new MaterialProgressPreference with the given style options.
      *
      * @param attrs Style attributes that differ from the default
      */
     private fun getAttrs(attrs: AttributeSet) {
-        val typedArray = context.obtainStyledAttributes(attrs, R.styleable.MaterialPreference)
+        val typedArray = context.obtainStyledAttributes(attrs, R.styleable.MaterialProgressPreference)
         setTypeArray(typedArray)
     }
 
     /**
-     * Construct a new MaterialPreference with the given style options.
+     * Construct a new MaterialProgressPreference with the given style options.
      *
      * @param attrs Style attributes that differ from the default
      * @param defStyleAttr An attribute in the current theme that contains a
@@ -108,7 +114,7 @@ class MaterialPreference : Preference {
      *        the view. Can be 0 to not look for defaults.
      */
     private fun getAttrs(attrs: AttributeSet, defStyleAttr: Int) {
-        val typeArray = context.obtainStyledAttributes(attrs, R.styleable.MaterialPreference, defStyleAttr, 0)
+        val typeArray = context.obtainStyledAttributes(attrs, R.styleable.MaterialProgressPreference, defStyleAttr, 0)
         setTypeArray(typeArray)
     }
 
@@ -124,41 +130,62 @@ class MaterialPreference : Preference {
     /**
      * A {@link Preference} that provides a two-state toggleable option.
      *
-     * @attr ref android.R.styleable#MaterialPreference_pref_title_color
-     * @attr ref android.R.styleable#MaterialPreference_pref_title_size
-     * @attr ref android.R.styleable#MaterialPreference_pref_summary_color
-     * @attr ref android.R.styleable#MaterialPreference_pref_summary_size
-     * @attr ref android.R.styleable#MaterialPreference_pref_background
-     * @attr ref android.R.styleable#MaterialPreferenceCategory_pref_category_padding_left
-     * @attr ref android.R.styleable#MaterialPreferenceCategory_pref_category_padding_top
-     * @attr ref android.R.styleable#MaterialPreferenceCategory_pref_category_padding_right
-     * @attr ref android.R.styleable#MaterialPreferenceCategory_pref_category_padding_bottom
+     * @attr ref android.R.styleable#MaterialProgressPreference_pref_progress_title_color
+     * @attr ref android.R.styleable#MaterialCheckBoxPreference_pref_progress_title_size
+     * @attr ref android.R.styleable#MaterialCheckBoxPreference_pref_progress_summary_color
+     * @attr ref android.R.styleable#MaterialCheckBoxPreference_pref_progress_summary_size
+     * @attr ref android.R.styleable#MaterialCheckBoxPreference_pref_progress_background
+     * @attr ref android.R.styleable#MaterialCheckBoxPreference_pref_progress_padding_left
+     * @attr ref android.R.styleable#MaterialCheckBoxPreference_pref_progress_padding_top
+     * @attr ref android.R.styleable#MaterialCheckBoxPreference_pref_progress_padding_right
+     * @attr ref android.R.styleable#MaterialCheckBoxPreference_pref_progress_padding_bottom
      */
     private fun setTypeArray(typeArray: TypedArray) {
         try {
-            this.titleColor = typeArray.getColor(R.styleable.MaterialPreference_pref_title_color, titleColor)
-            this.titleSize = typeArray.getDimension(R.styleable.MaterialPreference_pref_title_size, titleSize)
-            this.summaryColor = typeArray.getColor(R.styleable.MaterialPreference_pref_summary_color, summaryColor)
-            this.summarySize = typeArray.getDimension(R.styleable.MaterialPreference_pref_summary_size, summarySize)
-            this.background = typeArray.getColor(R.styleable.MaterialPreference_pref_background, background)
-            this.padding_left = typeArray.getDimension(R.styleable.MaterialPreferenceCategory_pref_category_padding_left, getDp(padding_left.toInt()).toFloat())
-            this.padding_top = typeArray.getDimension(R.styleable.MaterialPreferenceCategory_pref_category_padding_top, getDp(padding_top.toInt()).toFloat())
-            this.padding_right = typeArray.getDimension(R.styleable.MaterialPreferenceCategory_pref_category_padding_right, getDp(padding_right.toInt()).toFloat())
-            this.padding_bottom = typeArray.getDimension(R.styleable.MaterialPreferenceCategory_pref_category_padding_bottom, getDp(padding_bottom.toInt()).toFloat())
+            this.titleColor = typeArray.getColor(R.styleable.MaterialProgressPreference_pref_progress_title_color, titleColor)
+            this.titleSize = typeArray.getDimension(R.styleable.MaterialProgressPreference_pref_progress_title_size, titleSize)
+            this.summaryColor = typeArray.getColor(R.styleable.MaterialProgressPreference_pref_progress_summary_color, summaryColor)
+            this.summarySize = typeArray.getDimension(R.styleable.MaterialProgressPreference_pref_progress_summary_size, summarySize)
+            this.background = typeArray.getColor(R.styleable.MaterialProgressPreference_pref_progress_background, background)
+            this.padding_left = typeArray.getDimension(R.styleable.MaterialProgressPreference_pref_progress_padding_left, getDp(padding_left.toInt()).toFloat())
+            this.padding_top = typeArray.getDimension(R.styleable.MaterialProgressPreference_pref_progress_padding_top, getDp(padding_top.toInt()).toFloat())
+            this.padding_right = typeArray.getDimension(R.styleable.MaterialProgressPreference_pref_progress_padding_right, getDp(padding_right.toInt()).toFloat())
+            this.padding_bottom = typeArray.getDimension(R.styleable.MaterialProgressPreference_pref_progress_padding_bottom, getDp(padding_bottom.toInt()).toFloat())
+            this.visibility = typeArray.getBoolean(R.styleable.MaterialProgressPreference_pref_progress_visibility, visibility)
         } finally {
             typeArray.recycle()
         }
     }
 
     /**
-     * Set initial values.
+     * Initialize widget Layout Resource with customized switch.
+     *
+     */
+    override fun onCreateView(parent: ViewGroup): View {
+        parent.setBackgroundColor(ContextCompat.getColor(context, R.color.white_two))
+        widgetLayoutResource = R.layout.layout_progressbar_circle
+        return super.onCreateView(parent)
+    }
+
+    /**
+     * Set initial value of checkbox is checked.
      *
      * <p>
      *     it initialize styleable data
      */
     override fun onBindView(view: View) {
         super.onBindView(view)
+        val customProgressBar = view.findViewById<View>(R.id.custom_progressbar_item)
         view.setBackgroundColor(background)
+
+        customProgressBar?.let {
+            if (customProgressBar is ProgressBar) {
+                progressBar = customProgressBar
+            }
+        }
+
+        visible(visibility)
+
         view.setPadding(0, 0, 0, 0)
         title = view.findViewById(android.R.id.title)
         title.setPadding(0, 0, 0, 0)
@@ -170,8 +197,18 @@ class MaterialPreference : Preference {
         summary.setTextColor(summaryColor)
         summary.setTextSize(TypedValue.COMPLEX_UNIT_SP, summarySize)
 
-        parent = title.parent as RelativeLayout
+        val toggleButton = view.findViewById<LinearLayout>(android.R.id.widget_frame)
+        toggleButton.setPadding(0, 0, getDp(16), 0)
+
+        parent = summary.parent as RelativeLayout
         parent.setPadding(padding_left.toInt(), padding_top.toInt(), padding_right.toInt(), padding_bottom.toInt())
+    }
+
+    /**
+     * Get default value
+     */
+    override fun onGetDefaultValue(a: TypedArray, index: Int): Any {
+        return a.getBoolean(index, false)
     }
 
     /**
@@ -182,9 +219,13 @@ class MaterialPreference : Preference {
         return (size * scale + 0.5f).toInt()
     }
 
-    fun getTitleView() = this.title
-
-    fun getSummaryView() = this.summary
-
-    fun getParentView() = this.parent
+    /**
+     * set visibility progressbar
+     */
+    fun visible(visibility: Boolean) {
+        when(visibility) {
+            true -> progressBar?.visibility = View.VISIBLE
+            false -> progressBar?.visibility = View.INVISIBLE
+        }
+    }
 }

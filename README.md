@@ -7,7 +7,7 @@
 #### build.gradle
 ```xml
 dependencies {
-  implementation "com.github.battleent:MaterialPreferences:0.2.0"
+  implementation "com.github.battleent:MaterialPreferences:0.3.0"
 }
 ```
 
@@ -50,6 +50,7 @@ Can be used just like using Preferences.
 ```
 
 ### MaterialPreferenceCategory
+Material PreferenceCategory is composed of just title. It is used to split sections.
 ```xml
 <com.battleent.materialpreferences.MaterialPreferenceCategory
         android:title="Category"
@@ -62,6 +63,7 @@ Can be used just like using Preferences.
 ```
 
 ### MaterialPreference
+Material Preference is composed of title and summary.
 ```xml
 <com.battleent.materialpreferences.MaterialPreference
         android:defaultValue="true"
@@ -76,6 +78,7 @@ Can be used just like using Preferences.
 ```
 
 ### MaterialSwitchPreference
+Material Preference is composed of title, summary and switch. It saves switch's on-off status.
 ```xml
 <com.battleent.materialpreferences.MaterialSwitchPreference
         android:defaultValue="true"
@@ -89,6 +92,34 @@ Can be used just like using Preferences.
         app:pref_switch_checked_track_color="@android:color/holo_blue_light"
         app:pref_switch_unchecked_thumb_color="@android:color/holo_green_dark"
         app:pref_switch_unchecked_track_color="@android:color/holo_green_light"/>
+```
+
+### MaterialCheckBoxPreference
+Material Preference is composed of title, summary and checkbox. It saves checkbox's isChecked status.
+```xml
+    <com.battleent.materialpreferences.MaterialCheckBoxPreference
+        android:defaultValue="true"
+        android:key="Notification4"
+        android:title="Marketing"
+        android:summary="receive events, promotions like marketing messages."
+        app:pref_checkbox_background="@color/background800"
+        app:pref_checkbox_title_color="@android:color/holo_blue_light"
+        app:pref_checkbox_title_background="@color/background"
+        app:pref_checkbox_summary_color="@android:color/white"/>
+```
+
+### MaterialProgressPreference
+Material Preference is componsed of title, summary and progress.<br>
+It can be used to showing progress during synchronize or fetching data.
+```xml
+<com.battleent.materialpreferences.MaterialProgressPreference
+        android:title="Marketing"
+        android:summary="receive events, promotions like marketing messages."
+        app:pref_progress_visibility="true"/>
+```
+you can set visibility using below method.
+```java
+.visible(Boolean visibility)
 ```
 
 # License
